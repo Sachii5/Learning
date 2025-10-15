@@ -9,3 +9,4 @@ $vp = new VicePresident();
 
 $manager->sayHello("Alber");
 $vp->sayHello("Wildan");
+$vp->sayHelloParent("Alber");
