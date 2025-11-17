@@ -10,15 +10,27 @@ func main()  {
 
 	hewan := [...]string{"kucing", "anjing", "ikan", "ayam"}
 
-	slice1 := hewan[1:4]
-	slice2 := hewan[:2]
-	slice3 := hewan[3:]
-	slice4 := hewan[:]
+	// slice1 := hewan[1:4]
+	// slice2 := hewan[:2]
+	// slice3 := hewan[3:]
+	// slice4 := hewan[:]
 
-	fmt.Println(slice1)
-	fmt.Println(slice2)
-	fmt.Println(slice3)
-	fmt.Println(slice4)
+	// fmt.Println(slice1)
+	// fmt.Println(slice2)
+	// fmt.Println(slice3)
+	// fmt.Println(slice4)
 
+	// ======== MENGUBAH ISI ARRAY DENGAN SLICE ====== //
+
+	sliceHewan := hewan[2:]
+	sliceHewan[0] = "patin"
+	fmt.Println(hewan)
+
+	// ==================== APPEND() ================== //
+	
+	sliceHewan2 := append(sliceHewan, "rusa")
+	sliceHewan2[1] = "jago"
+	fmt.Println(sliceHewan2)
+	fmt.Println(hewan)
 
 }
