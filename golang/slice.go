@@ -10,15 +10,15 @@ func main()  {
 
 	hewan := [...]string{"kucing", "anjing", "ikan", "ayam"}
 
-	// slice1 := hewan[1:4]
-	// slice2 := hewan[:2]
-	// slice3 := hewan[3:]
-	// slice4 := hewan[:]
+	slice1 := hewan[1:4]
+	slice2 := hewan[:2]
+	slice3 := hewan[3:]
+	slice4 := hewan[:]
 
-	// fmt.Println(slice1)
-	// fmt.Println(slice2)
-	// fmt.Println(slice3)
-	// fmt.Println(slice4)
+	fmt.Println(slice1)
+	fmt.Println(slice2)
+	fmt.Println(slice3)
+	fmt.Println(slice4)
 
 	// ======== MENGUBAH ISI ARRAY DENGAN SLICE ====== //
 
@@ -32,5 +32,30 @@ func main()  {
 	sliceHewan2[1] = "jago"
 	fmt.Println(sliceHewan2)
 	fmt.Println(hewan)
+
+	// ================== MAKE() ==================== //
+
+	newSlice := make([]string, 3, 6)
+	newSlice[0] = "Alber"
+	newSlice[1] = "Alber"
+	newSlice[2] = "Alber"
+
+	fmt.Println(newSlice)
+
+	newSlice2 := append(newSlice, "Alber")
+	newSlice[0] = "Galih"
+	fmt.Println(newSlice2)
+	fmt.Println(newSlice)
+
+	// ================= COPY() =================== //
+
+	allHewan := hewan[:]
+	makhlukHidup := make([]string, len(allHewan), cap(allHewan))
+
+	copy(makhlukHidup, allHewan)
+
+	fmt.Println(makhlukHidup)
+	fmt.Println(len(makhlukHidup))
+	fmt.Println(cap(makhlukHidup))
 
 }
