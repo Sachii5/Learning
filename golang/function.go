@@ -44,11 +44,19 @@ func satuan(number string) string {
 	}
 }
 
+// ================ RECURSIVE FUNCTION ================ //
+func factorial(n int) int {
+	if n == 0 {
+		return 1
+	}
+	return n * factorial(n-1)
+}
+
 // ================ MAIN FUNCTION ================ //
 
 func main() {
 	name := sayName // Function as a value
-	fmt.Println(name("Alber"))
+	fmt.Println(name( "Alber"))
 
 	fmt.Println(hewan("Kucing", "Anjing")) // Multiple return values
 
@@ -66,5 +74,8 @@ func main() {
 	anonFunc := func(name string) string { // Anonymous function
 		return "Hi " + name
 	}
-	fmt.Println(anonFunc("Alber"))
+	fmt.Println(anonFunc("Alber")) // Memanggil anonymous function
+
+	fmt.Println(factorial(5)) // Recursive function
+	fmt.Println(5*4*3*2*1) // Pembuktian recursive function
 }
