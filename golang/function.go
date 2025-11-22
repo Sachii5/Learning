@@ -62,4 +62,9 @@ func main() {
 	fmt.Println(checkNumber("50", filter)) // Function as parameter
 	fmt.Println(checkNumber("500", filter)) // Function as parameter
 	fmt.Println(checkNumber("5000", filter)) // Function as parameter
+
+	anonFunc := func(name string) string { // Anonymous function
+		return "Hi " + name
+	}
+	fmt.Println(anonFunc("Alber"))
 }
