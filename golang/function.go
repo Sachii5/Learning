@@ -26,12 +26,22 @@ func sumAll(numbers ...int) int {
 }
 
 // ================= FUNCTION AS PARAMETER ================ //
-func checkNumber(number int, check func(int) string) string {
-	fmt.Println("Satuan dari", number, "adalah" , check(number))
+func checkNumber(number string, check func(string) string) string { 
+	//Function yg jadi parameter bisa dijadiin type data
+	return fmt.Sprintf("Satuan dari %s adalah %s", number, check(number))
+	
 }
 
-func satuan(number int) string {
-	if len()
+func satuan(number string) string {
+	if len(number) == 1 {
+		return "satuan"
+	} else if len(number) == 2 {
+		return "puluhan"
+	} else if len(number) == 3 {
+		return "ratusan"
+	} else {
+		return "ribuan atau lebih"
+	}
 }
 
 // ================ MAIN FUNCTION ================ //
@@ -46,4 +56,10 @@ func main() {
 	fmt.Println(sumAll(1, 2, 3, 4, 5)) // Mengirim beberapa argumen ke varargs
 	numbers := []int{10, 20, 30, 40, 50}
 	fmt.Println(sumAll(numbers...)) // Mengirim slice ke varargs
+
+	filter := satuan
+	fmt.Println(checkNumber("5", filter)) // Function as parameter
+	fmt.Println(checkNumber("50", filter)) // Function as parameter
+	fmt.Println(checkNumber("500", filter)) // Function as parameter
+	fmt.Println(checkNumber("5000", filter)) // Function as parameter
 }
