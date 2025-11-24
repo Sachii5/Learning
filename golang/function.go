@@ -26,18 +26,18 @@ func sumAll(numbers ...int) int {
 }
 
 // ================= FUNCTION AS PARAMETER ================ //
-func checkNumber(number string, check func(string) string) string { 
+func checkNumber(number int, check func(int) string) string { 
 	//Function yg jadi parameter bisa dijadiin type data
-	return fmt.Sprintf("Satuan dari %s adalah %s", number, check(number))
+	return fmt.Sprintf("Satuan dari %d adalah %s", number, check(number))
 	
 }
 
-func satuan(number string) string {
-	if len(number) == 1 {
+func satuan(number int) string {
+	if number >= 1 && number <= 9 {
 		return "satuan"
-	} else if len(number) == 2 {
+	} else if number >= 10 && number <= 99 {
 		return "puluhan"
-	} else if len(number) == 3 {
+	} else if number >= 100 && number <= 999 {
 		return "ratusan"
 	} else {
 		return "ribuan atau lebih"
@@ -66,10 +66,10 @@ func main() {
 	fmt.Println(sumAll(numbers...)) // Mengirim slice ke varargs
 
 	filter := satuan
-	fmt.Println(checkNumber("5", filter)) // Function as parameter
-	fmt.Println(checkNumber("50", filter)) // Function as parameter
-	fmt.Println(checkNumber("500", filter)) // Function as parameter
-	fmt.Println(checkNumber("5000", filter)) // Function as parameter
+	fmt.Println(checkNumber(5, filter)) // Function as parameter
+	fmt.Println(checkNumber(50, filter)) // Function as parameter
+	fmt.Println(checkNumber(500, filter)) // Function as parameter
+	fmt.Println(checkNumber(5000, filter)) // Function as parameter
 
 	anonFunc := func(name string) string { // Anonymous function
 		return "Hi " + name
