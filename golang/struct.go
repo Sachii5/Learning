@@ -15,6 +15,11 @@ func TambahUser(user *User) User {
 	return *user
 }
 
+// Struct method
+func (user User) sayHello()  {
+	fmt.Println("Halo ", user.Name)
+}
+
 func main()  {
 	user := User{"Alber", "Indonesia", 15}
 	TambahUser(&user)
@@ -22,4 +27,10 @@ func main()  {
 	fmt.Println("Name:", user.Name)
 	fmt.Println("Address:", user.Address)
 	fmt.Println("Age:", user.Age)
+
+	fmt.Println("===================================")
+	
+	user2 := User{Name : "Alber"}
+	user2.sayHello() // Struct method
+	
 }
