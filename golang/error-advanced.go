@@ -20,18 +20,34 @@ type ProductRepo struct {
 }
 
 func (r *ProductRepo) FindByID(id int) (Product, error) {
-	id, ok := r.products[id]
+	P, ok := r.products[id]
 	if !ok{
 		return Product{}, ErrProductNotFound
 	}
-	return user, nil
+	return P, nil
 }
 
 func (r *ProductRepo) UpdateStock(id int, update int) error{
+	P, ok := r.products[id]
+	if !ok{
+		return ErrProductNotFound
+	}
+
+	P.Stock = update 
+	r.products[id] = P
+	return nil
 }
 
 func main() {
-	Produk := Product{1, "mie", 5}
-	Repo := ProductRepo{}
+	r := ProductRepo{
+		products: map[int]Product {
+			1: {1, "Mie", 5},
+		},
+	}
 
+	p, err := r.FindByID(1)
+	fmt.Println(p,err)
+	err = r.UpdateStock(1, 2)
+	p, _ = r.FindByID(1)
+	fmt.Println(p,err)
 }
