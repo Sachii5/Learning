@@ -67,6 +67,26 @@ func (s *ProductService) Buy(id int, qty int) error {
 	return nil
 }
 
+func HandlerBuy(s *ProductService, id int, qty int)	{
+	err := s.Buy(id, qty)
+	switch{
+		case errors.Is(err, ErrInvalidQuantity):
+	 		fmt.Println("400 Bad Request :", err)
+				
+		case errors.Is(err, ErrProductNotFound):
+	 		fmt.Println("404 Not Found :", err)
+				
+		case errors.Is(err, ErrOutOfStock):
+	 		fmt.Println("409 conflict :", err)
+				
+		case err != nil:
+	 		fmt.Println("500 Internal Server Error :", err)
+			
+		default:
+			fmt.Println("200 Ok : Success")
+	}
+}
+
 func main() {
 	r := ProductRepo{
 		products: map[int]Product {
@@ -85,13 +105,21 @@ func main() {
 	
 	err = s.Buy(1, 5)
 	p, _ = s.repo.FindByID(1)
-	fmt.Println(p, err)
+	HandlerBuy(&s,1, 5)
+	// fmt.Println(p, err)
 	
 	err = s.Buy(2, 5)
 	p, _ = s.repo.FindByID(2)
-	fmt.Println(p, err)
+	HandlerBuy(&s,2, 5)
+	// fmt.Println(p, err)
 	
 	err = s.Buy(1, 11)
 	p, _ = s.repo.FindByID(1)
-	fmt.Println(p, err)
+	HandlerBuy(&s,1, 11)
+	// fmt.Println(p, err)
+	
+	err = s.Buy(1, -1)
+	p, _ = s.repo.FindByID(1)
+	HandlerBuy(&s,1, -1)
+	// fmt.Println(p, err)
 }
