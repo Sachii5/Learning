@@ -1,8 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
+	"net/http"
+	"strconv"
 )
 
 type Product struct {
@@ -22,6 +24,7 @@ type ProductService struct{
 var ErrProductNotFound = errors.New("product not found")
 var ErrInvalidQuantity = errors.New("invalid quantity")
 var ErrOutOfStock = errors.New("out of stock")
+var ErrInvalidId = errors.New("Invalid ID")
 
 func (r *ProductRepo) FindByID(id int) (Product, error) {
 	P, ok := r.products[id]
@@ -67,24 +70,48 @@ func (s *ProductService) Buy(id int, qty int) error {
 	return nil
 }
 
-func HandlerBuy(s *ProductService, id int, qty int)	{
-	err := s.Buy(id, qty)
-	switch{
-		case errors.Is(err, ErrInvalidQuantity):
-	 		fmt.Println("400 Bad Request :", err)
-				
-		case errors.Is(err, ErrProductNotFound):
-	 		fmt.Println("404 Not Found :", err)
-				
-		case errors.Is(err, ErrOutOfStock):
-	 		fmt.Println("409 conflict :", err)
-				
-		case err != nil:
-	 		fmt.Println("500 Internal Server Error :", err)
-			
-		default:
-			fmt.Println("200 Ok : Success")
+func (s *ProductService) Product(id int) (Product, error){
+	if id <= 0 {
+		return Product{}, ErrInvalidId
 	}
+	
+	p, err := s.repo.FindByID(id)
+	if err != nil {
+		if errors.Is(err, ErrProductNotFound){
+			return Product{}, ErrProductNotFound
+		}
+		return Product{}, fmt.Errorf("Service product : %w", err)
+	}
+	return p, nil
+	}
+	
+
+func (s *ProductService) productHandler(w http.ResponseWriter, r *http.Request){
+	idstr := r.URL.Query().Get("id")
+	if idstr == ""{
+		http.Error(w, "Missing id", 400)
+		return
+	}
+	
+	id, err := strconv.Atoi(idstr)
+	if err != nil{
+		http.Error(w, "Invalid id", 400)
+		return
+	}
+	
+	product, err := s.Product(id)
+	if err != nil{
+		switch{
+		case errors.Is(err, ErrInvalidId):
+			http.Error(w, "Invalid ID", 400)
+		case errors.Is(err, ErrProductNotFound):
+			http.Error(w, "Product not found", 404)
+		default:
+			http.Error(w, "Internal server error", 500)
+		}
+		return
+	}
+	fmt.Fprintln(w, "Product id :", product)
 }
 
 func main() {
@@ -93,33 +120,15 @@ func main() {
 			1: {1, "Mie", 5},
 		},
 	}
-	
-
-	p, err := r.FindByID(1)
-	fmt.Println(p,err)
-	err = r.UpdateStock(1, 10)
-	p, _ = r.FindByID(1)
-	fmt.Println(p,err)
-	
 	s := ProductService{repo :&r}
 	
-	err = s.Buy(1, 5)
-	p, _ = s.repo.FindByID(1)
-	HandlerBuy(&s,1, 5)
-	// fmt.Println(p, err)
+	http.HandleFunc("/product", s.productHandler)
 	
-	err = s.Buy(2, 5)
-	p, _ = s.repo.FindByID(2)
-	HandlerBuy(&s,2, 5)
-	// fmt.Println(p, err)
+	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "pong")
+	})
 	
-	err = s.Buy(1, 11)
-	p, _ = s.repo.FindByID(1)
-	HandlerBuy(&s,1, 11)
-	// fmt.Println(p, err)
-	
-	err = s.Buy(1, -1)
-	p, _ = s.repo.FindByID(1)
-	HandlerBuy(&s,1, -1)
-	// fmt.Println(p, err)
+
+	http.ListenAndServe(":8080", nil)
+
 }
